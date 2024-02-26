@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
+using System.IO;
 //using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Exceptions;
@@ -9,6 +10,9 @@ using Telegram.Bot.Polling;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 using System.Net;
+using OfficeOpenXml;
+using System.Text.RegularExpressions;
+
 
 namespace TelegramBotExperiments
 {
@@ -18,7 +22,9 @@ namespace TelegramBotExperiments
         static public int ab = 0;
         static ITelegramBotClient bot = new TelegramBotClient("6595172380:AAGKgeFBD67lOpErz0goIoO5Ilm7nLtIb-Q");
         public static async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
+
         {
+
             // Некоторые действия
             //Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(update));
             //if (update.Type == Telegram.Bot.Types.Enums.UpdateType.Message)
@@ -32,7 +38,6 @@ namespace TelegramBotExperiments
             //    await botClient.SendTextMessageAsync(message.Chat, "Привет-привет!!");
             //}
 
-            // Обязательно ставим блок try-catch, чтобы наш бот не "падал" в случае каких-либо ошибок
             try
             {
                 
@@ -85,6 +90,35 @@ namespace TelegramBotExperiments
                                 case MessageType.Text:
                                     {
                                         // тут обрабатываем команду /start, остальные аналогично
+
+
+                                        //Console.WriteLine("Введите URL адрес в формате https://....:");
+                                        //string userInput = Console.ReadLine();
+
+                                        Regex regex = new Regex(@"^https:\/\/.*$");
+                                        //if (regex.IsMatch(userInput))
+                                        //{
+                                        //    await botClient.SendTextMessageAsync(
+                                        //    chat.Id,
+                                        //    $"Спасибо! URL-адрес успешно принят");
+                                        //}
+                                        //else
+                                        //{
+                                        //    await botClient.SendTextMessageAsync(
+                                        //    chat.Id,
+                                        //    $"Неверный формат URL адреса. Пожалуйста, введите URL в формате https://....");
+                                        //}
+
+
+                                        if (regex.IsMatch(message.Text))
+                                        {
+                                            await botClient.SendTextMessageAsync(
+                                            chat.Id,
+                                            $"Спасибо! URL-адрес успешно принят");
+
+                                        }
+
+
                                         if (message.Text == "/start")
                                         {
 
@@ -119,17 +153,17 @@ namespace TelegramBotExperiments
 
 
 
-                                        new InlineKeyboardButton[] // тут создаем массив кнопок
-                                        {
-                                            InlineKeyboardButton.WithUrl("Мы в VK", "https://vk.com/kibervolonterykhv"),
-                                            InlineKeyboardButton.WithUrl("Мы в Telegram", "https://t.me/kibervolonterykhv"),
-                                        },
-                                        new InlineKeyboardButton[]
-                                        {
-                                            InlineKeyboardButton.WithCallbackData("Написать на почту", "Написать на почту"),
-                                            //InlineKeyboardButton.WithCallbackData("Тут еще копка", "button2"), // после нажатия всплывает сообщение
-                                            InlineKeyboardButton.WithCallbackData("Перейти на наш сайт", "button3"), //после нажатия выводится окно с сообщением
-                                        },
+                                                    new InlineKeyboardButton[] // тут создаем массив кнопок
+                                                    {
+                                                        InlineKeyboardButton.WithUrl("Мы в VK", "https://vk.com/kibervolonterykhv"),
+                                                        InlineKeyboardButton.WithUrl("Мы в Telegram", "https://t.me/kibervolonterykhv"),
+                                                    },
+                                                    new InlineKeyboardButton[]
+                                                    {
+                                                        InlineKeyboardButton.WithCallbackData("Написать на почту", "Написать на почту"),
+                                                        //InlineKeyboardButton.WithCallbackData("Тут еще копка", "button2"), // после нажатия всплывает сообщение
+                                                        InlineKeyboardButton.WithCallbackData("Перейти на наш сайт", "button3"), //после нажатия выводится окно с сообщением
+                                                    },
                                                 });
 
                                             await botClient.SendTextMessageAsync(
@@ -157,35 +191,37 @@ namespace TelegramBotExperiments
 
 
 
-                                        new InlineKeyboardButton[] // тут создаем массив кнопок
-                                        {
-                                            InlineKeyboardButton.WithCallbackData("Отправить фото", "photo"),
-                                            InlineKeyboardButton.WithCallbackData("Направить ссылку", "web"),
-                                        },
-                                        new InlineKeyboardButton[]
-                                        {
-                                            InlineKeyboardButton.WithCallbackData("Пост социальной сети", "post"),
-                                            //InlineKeyboardButton.WithCallbackData("Тут еще копка", "button2"), // после нажатия всплывает сообщение
-                                            InlineKeyboardButton.WithCallbackData("Иное", "other"), //после нажатия выводится окно с сообщением
-                                        },
+                                                    new InlineKeyboardButton[] // тут создаем массив кнопок
+                                                    {
+                                                        InlineKeyboardButton.WithCallbackData("Отправить фото", "photo"),
+                                                        InlineKeyboardButton.WithCallbackData("Направить ссылку", "web"),
+                                                    },
+                                                    new InlineKeyboardButton[]
+                                                    {
+                                                        InlineKeyboardButton.WithCallbackData("Пост социальной сети", "post"),
+                                                        //InlineKeyboardButton.WithCallbackData("Тут еще копка", "button2"), // после нажатия всплывает сообщение
+                                                        InlineKeyboardButton.WithCallbackData("Иное", "other"), //после нажатия выводится окно с сообщением
+                                                    },
                                                 });
 
                                             await botClient.SendTextMessageAsync(
                                                 chat.Id,
                                                 "Благодарим за Ваше содействие и помощь в деятельности нашей организации!\n" +
                                                 " - Если, гуляя по улице, ты случайно заметил информацию, которая противоречит действующему " +
-                                                "законодательству РФ, то смело нажимай команду 'Отправить фото!\n'" +
+                                                "законодательству РФ, то смело нажимай команду 'Отправить фото!'\n" +
                                                 " - Или, листая ленту в любимой Соцсети, наткнулся на контент, который даже при всем своем желании" +
                                                 "не считаешь законным, - жми 'Пост социальной сети'\n" +
                                                 " - Гулял на просторах Интернета, но увидел противоправный контент?" +
                                                 "Направляй ссылку на него, нажав на кнопку 'Направить ссылку'\n" +
                                                 " - Есть иной источник распространения незаконной информации? " +
                                                 "Жми 'Иное'\n\n" +
-                                                "Перед тем, как отправить найденный источник, обязательно прочти Инструкцию!" +
-                                                "В ней подробно прописано, что относится к противоправному контенту, в каких социальных" +
-                                                "сетях мы рассматриваем и другую важную информацию.",
+                                                "Перед тем, как отправить найденный источник, обязательно прочти Инструкцию! " +
+                                                "В ней подробно прописано, что относится к противоправному контенту, какие социальные " +
+                                                "сети мы рассматриваем, и другую важную информацию.",
                                                 replyMarkup: infoKeyboard); // Все клавиатуры передаются в параметр replyMarkup
 
+
+                                           
                                             return;
                                         }
 
@@ -200,22 +236,22 @@ namespace TelegramBotExperiments
                                             var replyKeyboard = new ReplyKeyboardMarkup(
                                                 new List<KeyboardButton[]>()
                                                 {
-                                        new KeyboardButton[]
-                                        {
-                                            new KeyboardButton("Привет!"),
+                                                    new KeyboardButton[]
+                                                    {
+                                                        new KeyboardButton("Привет!"),
                                             
-                                            new KeyboardButton("Пока!"),
-                                        },
-                                        new KeyboardButton[]
-                                        {
-                                            new KeyboardButton("отправь фотку с запрещённым контентом!")
+                                                        new KeyboardButton("Пока!"),
+                                                    },
+                                                    new KeyboardButton[]
+                                                    {
+                                                        new KeyboardButton("отправь фотку с запрещённым контентом!")
 
                                            
-                                        },
-                                        new KeyboardButton[]
-                                        {
-                                            new KeyboardButton("Напиши моему соседу!") 
-                                        }
+                                                    },
+                                                    new KeyboardButton[]
+                                                    {
+                                                        new KeyboardButton("Напиши моему соседу!") 
+                                                    }
                                                 })
                                             {
                                                 // автоматическое изменение размера клавиатуры, если не стоит true,
@@ -237,15 +273,13 @@ namespace TelegramBotExperiments
                                         // фото скачивает на рабочий стол
                                         //надо поменять путь к скачанным файлам
 
-
-
                                         if (message.Type == MessageType.Photo)
                                         {
                                             var fileId = message.Photo[^1].FileId;
                                             var file = await botClient.GetFileAsync(fileId);
 
-                                            var pathToSave = $@"C:\Users\user\Desktop\Бот сука бот\картинки\file{ab}.jpg";
-                                            ab++;// Укажите путь сохранения
+                                            var pathToSave = $@"C:\Users\user\Desktop\Бот сука бот\картинки\{fileId}.jpg";
+                                            //ab++;// Укажите путь сохранения
 
                                             using (var client = new WebClient())
                                             {
@@ -261,18 +295,18 @@ namespace TelegramBotExperiments
 
 
 
-                                        if (message.Text == "Напиши моему соседу!")
-                                        {
-                                            await botClient.SendTextMessageAsync(
-                                                chat.Id,
-                                                "Какому?",
-                                                replyToMessageId: message.MessageId);
+                                        // здесь  сохраняется текст в файл excel
 
-                                            return;
-                                        }
+                                          
+
+
+
+
+                                        
 
                                         return;
                                     }
+
                                 case MessageType.Photo:
                                     {
                                         //if (message.Type == MessageType.Photo)
@@ -298,8 +332,8 @@ namespace TelegramBotExperiments
                                         var fileId = message.Photo.Last().FileId; // Получаем FileId последней (самой большой по размеру) фотографии
                                         var file = await botClient.GetFileAsync(fileId); // Получаем информацию о файле
                                         var filePath = file.FilePath; // Получаем путь к файлу
-                                        string destinationFilePath = $@"C:\Users\user\Desktop\Бот сука бот\картинки\file{ab}.jpg";
-                                        ab++;// Укажите путь к папке на ПК админа
+                                        string destinationFilePath = $@"C:\Users\user\Desktop\Бот сука бот\картинки\{fileId}.jpg";
+                                        //     ab++;// Укажите путь к папке на ПК админа
                                         using var stream = System.IO.File.OpenWrite(destinationFilePath);
                                         await botClient.DownloadFileAsync(filePath, stream); // Сохраняем файл
                                         await botClient.SendTextMessageAsync(message.Chat.Id, "Фотография сохранена"); // Отправляем пользователю сообщение об успешном сохранении
@@ -377,14 +411,15 @@ namespace TelegramBotExperiments
                                         return;
                                     }
 
-                                case "button2":     // после нажатия всплывает сообщение
+                                case "web":     // после нажатия всплывает сообщение
                                     {
                                         // А здесь мы добавляем наш сообственный текст, который заменит слово "загрузка", когда мы нажмем на кнопку
-                                        await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "Спасибо!");
+                                        await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "Просто отправь ссылку текстовым сообщением");
+                                        
 
-                                        await botClient.SendTextMessageAsync(
-                                            chat.Id,
-                                            $"Вы нажали на {callbackQuery.Data}");
+                                        //await botClient.SendTextMessageAsync(
+                                        //    chat.Id,
+                                        //    $"Спасибо!");
                                         return;
                                     }
 
@@ -392,28 +427,28 @@ namespace TelegramBotExperiments
                                     {
                                         // А здесь мы добавляем наш сообственный текст, который заменит слово "загрузка", когда мы нажмем на кнопку
                                         await botClient.AnswerCallbackQueryAsync(callbackQuery.Id, "Отправь, пожалуйста, фото файлом!\n" +
-                                            "После того, как отправишь, напиши краткое описание, что ты посчитал противоправным)");
+                                            "После того, как отправишь, напиши краткое описание, что ты посчитал противоправным)", true);
 
                                         
 
-                                        var infoKeyboard = new InlineKeyboardMarkup(
-                                                new List<InlineKeyboardButton[]>() // здесь создаем лист (массив), который содрежит в себе массив из класса кнопок
-                                                { 
-                                        new InlineKeyboardButton[] // тут создаем массив кнопок
-                                        {
-                                            InlineKeyboardButton.WithUrl("Анонимно", "anonphoto"),
-                                            InlineKeyboardButton.WithUrl("Не анонимно", "neanonphoto"),
-                                        },
+                                        //var anonKeyboard = new InlineKeyboardMarkup(
+                                        //        new List<InlineKeyboardButton[]>() // здесь создаем лист (массив), который содрежит в себе массив из класса кнопок
+                                        //        { 
+                                        //new InlineKeyboardButton[] // тут создаем массив кнопок
+                                        //{
+                                        //    InlineKeyboardButton.WithUrl("Анонимно", "anonphoto"),
+                                        //    InlineKeyboardButton.WithUrl("Не анонимно", "neanonphoto"),
+                                        //},
                                        
-                                                });
+                                        //        });
 
                                         //await botClient.SendTextMessageAsync(
                                         //    chat.Id,
                                         //    $"Ты предпочитаешь быть нашим анонимным помощником, или хочешь, " +
                                         //    $"чтобы мы знали кибергероя?",
-                                        //    replyMarkup: infoKeyboard); // Все клавиатуры передаются в параметр replyMarkup
+                                        //    replyMarkup: anonKeyboard); // Все клавиатуры передаются в параметр replyMarkup
 
-                                       
+
                                         return;
                                     }
 
@@ -465,6 +500,7 @@ namespace TelegramBotExperiments
                 HandleErrorAsync,
                 receiverOptions,
                 cancellationToken
+
             );
             Console.ReadLine();
         }
